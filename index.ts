@@ -12,7 +12,6 @@ import {
 } from "express-validator";
 
 dotenv.config();
-
 const app = express();
 const PORT = process.env.PORT || 3000;
 
