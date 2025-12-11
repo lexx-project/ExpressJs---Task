@@ -1,17 +1,16 @@
-import express from "express";
-import {
-  createCategory,
-  getCategory,
-  updateCategory,
-  deleteCategory,
-} from "../controllers/category.controller.js";
-import { validateCategory } from "../middlewares/validator.middleware.js";
+import { Router } from "express";
+import { createCategory, deleteCategory, getAllCategory, getCategoryById, updateCategory } from "../controllers/category.controller";
+import { searchCategories } from "../services/category.service";
+import { validate } from "../utils/validate";
+import { createCategoryValidation, updateCategoryValidation } from "../middleware/category.validation";
 
-const router = express.Router();
+const router = Router()
 
-router.get("/", getCategory);
-router.post("/", validateCategory, createCategory);
-router.put("/:id", validateCategory, updateCategory);
-router.delete("/:id", deleteCategory);
+router.get("/categories", getAllCategory)
+router.get("/categories/search", searchCategories)
+router.get("/categories/:id", getCategoryById)
+router.post("/categories", validate(createCategoryValidation), createCategory)
+router.put("/categories/:id", validate(updateCategoryValidation), updateCategory)
+router.delete("/categories/:id", deleteCategory)
 
-export default router;
+export default router

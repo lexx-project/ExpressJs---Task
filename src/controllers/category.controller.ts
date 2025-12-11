@@ -1,43 +1,35 @@
-import { type Request, type Response } from "express";
-import { CategoryServices } from "../services/category.services.js";
-import { responseError, responseSucces } from "../utils/response.js";
+import * as categoryService  from '../services/category.service';
+import { asyncHandler } from '../utils/async.handler';
+import { succesResponse } from '../utils/response';
+import type { Request, Response } from 'express';
 
-export const getCategory = (req: Request, res: Response) => {
-  try {
-    const result = CategoryServices.findAll();
-    responseSucces(res, result, "Categories retrieved successfully");
-  } catch (error) {
-    responseError(res, 500, "Internal Server Error");
-  }
-};
+export const getAllCategory = asyncHandler(async(_req: Request, res: Response) => {
+    const categories = await categoryService.getAllCategory()
+    return succesResponse(res, "Categories fetched successfully", categories, 200)
+})
 
-export const createCategory = (req: Request, res: Response) => {
-  try {
-    const { name } = req.body;
-    const result = CategoryServices.create(name);
-    responseSucces(res, result, "Category created successfully", 201);
-  } catch (error) {
-    responseError(res, 500, "Internal Server Error");
-  }
-};
+export const getCategoryById = asyncHandler(async(req: Request, res: Response) => {
+    const categories = await categoryService.getCategoryById(Number(req.params.id))
+    return succesResponse(res, "Category fetched successfully", categories, 200)
+})
 
-export const updateCategory = (req: Request, res: Response) => {
-  try {
-    const id = Number(req.params.id);
-    const { name } = req.body;
-    const result = CategoryServices.update(id, name);
-    responseSucces(res, result, "Category updated successfully");
-  } catch (error: any) {
-    responseError(res, 404, error.message);
-  }
-};
+export const createCategory = asyncHandler(async(req: Request, res: Response) => {
+    const categories = await categoryService.createCategory(req.body)
+    return succesResponse(res, "Category created successfully", categories, 201)
+})
 
-export const deleteCategory = (req: Request, res: Response) => {
-  try {
-    const id = Number(req.params.id);
-    const result = CategoryServices.delete(id);
-    responseSucces(res, result, "Category deleted successfully");
-  } catch (error: any) {
-    responseError(res, 404, error.message);
-  }
-};
+export const updateCategory = asyncHandler(async(req: Request, res: Response) => {
+    const categories = await categoryService.updateCategory(Number(req.params.id), req.body)
+    return succesResponse(res, "Category updated successfully", categories, 200)
+})
+
+export const deleteCategory = asyncHandler(async(req: Request, res: Response) => {
+    const categories = await categoryService.deleteCategory(Number(req.params.id))
+    return succesResponse(res, "Category deleted successfully", categories, 200)
+})
+
+export const searchCategories = asyncHandler(async(req: Request, res: Response) => {
+    const name = req.query.name as string
+    const categories = await categoryService.searchCategories(name)
+    return succesResponse(res, "Categories fetched successfully", categories, 200)
+})
