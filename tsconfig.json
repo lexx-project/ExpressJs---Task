@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "paths": {
+      "#generated/client": ["./src/generated/client.ts"]
+    },
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "target": "ES2022",
+    "lib": ["esnext"],
+    "types": ["node"],
+    "sourceMap": true,
+    "strict": false,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "moduleDetection": "force"
+  },
+  "include": ["src"],
+  "exclude": ["node_modules"]
+}
