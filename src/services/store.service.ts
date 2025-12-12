@@ -4,7 +4,7 @@ export const getAllStore = async () => {
     return await prisma.store.findMany()
 }
 
-    export const getStoreById = async (id: number) => {
+    export const getStoreById = async (id: string) => {
     return await prisma.store.findUnique({
         where: {
             id
@@ -18,7 +18,7 @@ export const createStore = async (data: any) => {
     })
 }
 
-export const updateStore = async (id: number, data: any) => {
+export const updateStore = async (id: string, data: any) => {
     return await prisma.store.update({
         where: {
             id
@@ -27,7 +27,7 @@ export const updateStore = async (id: number, data: any) => {
     })
 }
 
-export const deleteStore = async (id: number) => {
+export const deleteStore = async (id: string) => {
     return await prisma.store.delete({
         where: {
             id

@@ -1,6 +1,10 @@
 import prisma from "../prisma.js";
 export const getAllProduct = async () => {
-    return await prisma.product.findMany();
+    return await prisma.product.findMany({
+        where: {
+            deletedAt: null
+        }
+    });
 };
 export const createProduct = async (data) => {
     return await prisma.product.create({
@@ -10,22 +14,26 @@ export const createProduct = async (data) => {
 export const getProductById = async (id) => {
     return await prisma.product.findUnique({
         where: {
-            id
+            id,
+            deletedAt: null
         }
     });
 };
 export const updateProduct = async (id, data) => {
     return await prisma.product.update({
         where: {
-            id
+            id,
         },
         data
     });
 };
 export const deleteProduct = async (id) => {
-    return await prisma.product.delete({
+    return await prisma.product.update({
         where: {
             id
+        },
+        data: {
+            deletedAt: new Date()
         }
     });
 };

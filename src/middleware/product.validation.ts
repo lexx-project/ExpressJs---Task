@@ -19,16 +19,16 @@ export const createProductValidation = [
 
 export const getProductValidation = [
     param("id").notEmpty().withMessage("ID produk harus diisi"),
-    param("id").isNumeric().withMessage("ID produk harus berupa angka"),
+    param("id").isUUID().withMessage("ID produk harus berupa UUID"),
 ]
 
 export const deleteProductValidation = [
     param("id").notEmpty().withMessage("ID produk harus diisi"),
-    param("id").isNumeric().withMessage("ID produk harus berupa angka"),
+    param("id").isUUID().withMessage("ID produk harus berupa UUID"),
 ]
 
 export const updateProductValidation = [
     param("id").notEmpty().withMessage("ID produk harus diisi"),
-    param("id").isNumeric().withMessage("ID produk harus berupa angka"),
+    param("id").isUUID().withMessage("ID produk harus berupa UUID"),
 ]
 

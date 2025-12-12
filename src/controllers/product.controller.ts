@@ -15,17 +15,17 @@ export const createProduct = asyncHandler(async(req: Request, res: Response) => 
 })
 
 export const getProductById = asyncHandler(async(req: Request, res: Response) => {
-    const product = await ProductServices.getProductById(Number(req.params.id));
+    const product = await ProductServices.getProductById(req.params.id);
     succesResponse(res, "Product fetched successfully", product, 200)
 })
 
 export const updateProduct = asyncHandler(async(req: Request, res: Response) => {
-    const product = await ProductServices.updateProduct(Number(req.params.id), req.body);
+    const product = await ProductServices.updateProduct(req.params.id, req.body);
     succesResponse(res, "Product updated successfully", product, 200)
 })
 
 export const deleteProduct = asyncHandler(async(req: Request, res: Response) => {
-    const product = await ProductServices.deleteProduct(Number(req.params.id));
+    const product = await ProductServices.deleteProduct(req.params.id);
     succesResponse(res, "Product deleted successfully", product, 200)
 })
 

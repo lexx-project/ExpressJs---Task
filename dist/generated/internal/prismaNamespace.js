@@ -84,7 +84,8 @@ export const CategoryScalarFieldEnum = {
     id: 'id',
     name: 'name',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    deletedAt: 'deletedAt'
 };
 export const ProductScalarFieldEnum = {
     id: 'id',
@@ -94,7 +95,8 @@ export const ProductScalarFieldEnum = {
     stock: 'stock',
     categoryId: 'categoryId',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    deletedAt: 'deletedAt'
 };
 export const StoreScalarFieldEnum = {
     id: 'id',
@@ -102,7 +104,8 @@ export const StoreScalarFieldEnum = {
     description: 'description',
     location: 'location',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    deletedAt: 'deletedAt'
 };
 export const SortOrder = {
     asc: 'asc',
