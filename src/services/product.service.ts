@@ -1,7 +1,11 @@
 import prisma from "../prisma"
 
 export const getAllProduct = async () => {
-    return await prisma.product.findMany();
+    return await prisma.product.findMany({
+        where: {
+            deletedAt: null
+        }
+    });
 }
 
 export const createProduct = async (data: any) => {
@@ -10,27 +14,31 @@ export const createProduct = async (data: any) => {
     })
 }
 
-export const getProductById = async (id: number) => {
+export const getProductById = async (id: string) => {
     return await prisma.product.findUnique({
         where: {
-            id
+            id,
+            deletedAt: null
         }
     })
 }
 
-export const updateProduct = async (id: number, data: any) => {
+export const updateProduct = async (id: string, data: any) => {
     return await prisma.product.update({
         where: {
-            id
+            id,
         },
         data
     })
 }
 
-export const deleteProduct = async (id: number) => {
-    return await prisma.product.delete({
+export const deleteProduct = async (id: string) => {
+    return await prisma.product.update({
         where: {
             id
+        },
+        data: {
+            deletedAt: new Date()
         }
     })
 }

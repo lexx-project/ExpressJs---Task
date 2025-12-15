@@ -1,16 +1,24 @@
 model Product {
-    id Int @id @default(autoincrement())
+    id String @id @default(uuid()) @db.Uuid
     name String
     description String?
     price Decimal @db.Decimal(10, 2)
-
     stock Int @default(8)  
-    categoryId  Int?     
+
+//relation to Store
+    storeId String @db.Uuid
+    store Store @relation(fields: [storeId], references: [id])
+
+//relation to Category
+categoryId  String?     @db.Uuid     
     category    Category? @relation(fields: [categoryId], references: [id])
+    
+    //relation to Transaction Item
+    transactionItems TransactionItem[]
     
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-
+    deletedAt DateTime? @db.Timestamptz     
 
 
     @@map("products")

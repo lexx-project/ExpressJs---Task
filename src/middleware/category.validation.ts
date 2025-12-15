@@ -6,6 +6,6 @@ export const createCategoryValidation = [
 
 export const updateCategoryValidation = [
     param('id').notEmpty().withMessage("ID kategori harus diisi"),
-    param('id').isNumeric().withMessage("ID kategori harus berupa angka"),
+    param('id').isUUID().withMessage("ID kategori harus berupa UUID"),
     body("name").notEmpty().withMessage("Nama kategori harus diisi"),   
 ]

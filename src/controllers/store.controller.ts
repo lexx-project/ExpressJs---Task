@@ -9,7 +9,7 @@ export const getAllStore = asyncHandler(async(_req: Request, res: Response) => {
 })
 
 export const getStoreById = asyncHandler(async(req: Request, res: Response) => {
-    const store = await storeServices.getStoreById(Number(req.params.id))
+    const store = await storeServices.getStoreById(req.params.id)
     return succesResponse(res, "Store fetched successfully", store, 200)
 }) 
 
@@ -19,11 +19,11 @@ export const createStore = asyncHandler(async(req: Request, res: Response) => {
 })
 
 export const updateStore = asyncHandler(async(req: Request, res: Response) => {
-    const store = await storeServices.updateStore(Number(req.params.id), req.body)
+    const store = await storeServices.updateStore(req.params.id, req.body)
     return succesResponse(res, "Store updated successfully", store, 200)
 })
 
 export const deleteStore = asyncHandler(async(req: Request, res: Response) => {
-    const store = await storeServices.deleteStore(Number(req.params.id))
+    const store = await storeServices.deleteStore(req.params.id)
     return succesResponse(res, "Store deleted successfully", store, 200)
 })  

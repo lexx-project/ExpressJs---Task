@@ -1,13 +1,18 @@
 import prisma from "../prisma"
 
 export const getAllCategory = async () => {
-    return await prisma.category.findMany()
+    return await prisma.category.findMany({
+        where: {
+            deletedAt: null
+        }
+    })
 }
 
-export const getCategoryById = async (id: number) => {
+export const getCategoryById = async (id: string) => {
     return await prisma.category.findUnique({
         where: {
-            id
+            id,
+            deletedAt: null
         }
     })
 }
@@ -18,19 +23,22 @@ export const createCategory = async (data: any) => {
     })
 }
 
-export const updateCategory = async (id: number, data: any) => {
+export const updateCategory = async (id: string, data: any) => {
     return await prisma.category.update({
         where: {
-            id
+            id,
         },
         data
     })
 }
 
-export const deleteCategory = async (id: number) => {
-    return await prisma.category.delete({
+export const deleteCategory = async (id: string) => {
+    return await prisma.category.update({
         where: {
-            id
+            id,
+        },
+        data: {
+            deletedAt: new Date()
         }
     })
 }

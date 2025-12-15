@@ -1,11 +1,13 @@
 model Store {
-id          Int       @id @default(autoincrement())
+id          String       @id @default(uuid()) @db.Uuid
   name        String    @unique
   description String?
   location    String?
+  products    Product[]
   
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime? @db.Timestamptz
 
   @@map("stores")
 }
