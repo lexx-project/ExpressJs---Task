@@ -6,9 +6,9 @@ import { createStoreValidation, updateStoreValidation } from "../middleware/stor
 const router = Router()
 
 router.get("/stores", getAllStore)
-router.get("/store/:id", getStoreById)
-router.post("/store", validate(createStoreValidation),createStore)
-router.put("/store/:id", validate(updateStoreValidation),updateStore)
-router.delete("/store/:id", deleteStore)
+router.get("/stores/:id", getStoreById)
+router.post("/stores", validate(createStoreValidation),createStore)
+router.put("/stores/:id", validate(updateStoreValidation),updateStore)
+router.delete("/stores/:id", deleteStore)
 
 export default router
