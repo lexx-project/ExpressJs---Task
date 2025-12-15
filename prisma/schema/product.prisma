@@ -8,6 +8,9 @@ model Product {
     categoryId  String?     @db.Uuid     
     category    Category? @relation(fields: [categoryId], references: [id])
     
+    //relation to Transaction Item
+    transactionItems TransactionItem[]
+    
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
     deletedAt DateTime? @db.Timestamptz     
