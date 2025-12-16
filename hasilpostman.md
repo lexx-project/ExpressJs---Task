@@ -119,6 +119,7 @@
       "createdAt": "2025-12-16T02:41:07.006Z",
       "updatedAt": "2025-12-16T02:41:07.006Z",
       "deletedAt": null
+      // 🔒 password field excluded for security
     },
     {
       "id": "b1377f31-5323-4544-a763-9edeb88afd80",
@@ -132,6 +133,8 @@
   ]
 }
 ```
+
+> **🔒 Security:** Password hash is excluded from all user responses for security reasons.
 
 ### Get User By ID
 
