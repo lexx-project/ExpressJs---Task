@@ -111,6 +111,8 @@ export const UserScalarFieldEnum = {
   id: 'id',
   name: 'name',
   email: 'email',
+  password: 'password',
+  role: 'role',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt'
@@ -125,6 +127,7 @@ export const ProductScalarFieldEnum = {
   description: 'description',
   price: 'price',
   stock: 'stock',
+  storeId: 'storeId',
   categoryId: 'categoryId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
@@ -139,6 +142,7 @@ export const StoreScalarFieldEnum = {
   name: 'name',
   description: 'description',
   location: 'location',
+  userId: 'userId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt'

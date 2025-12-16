@@ -3,6 +3,12 @@ id          String       @id @default(uuid()) @db.Uuid
   name        String    @unique
   description String?
   location    String?
+  
+  //relation to User
+  userId      String?   @db.Uuid
+  user        User?     @relation(fields: [userId], references: [id])
+  
+  //relation to Product
   products    Product[]
   
   createdAt   DateTime  @default(now())

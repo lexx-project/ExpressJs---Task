@@ -2,8 +2,11 @@ model User {
     id String @id @default(uuid()) @db.Uuid
     name String
     email String @unique
+    password String
+    role String @default("USER")
 
     //relation
+    stores Store[]
     transactions Transaction[]
 
     createdAt DateTime @default(now())

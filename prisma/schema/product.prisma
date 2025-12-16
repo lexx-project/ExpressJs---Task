@@ -10,7 +10,7 @@ model Product {
     store Store @relation(fields: [storeId], references: [id])
 
 //relation to Category
-categoryId  String?     @db.Uuid     
+    categoryId  String?     @db.Uuid     
     category    Category? @relation(fields: [categoryId], references: [id])
     
     //relation to Transaction Item
