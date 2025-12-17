@@ -45,6 +45,11 @@ export { Prisma }
  */
 export type Category = Prisma.CategoryModel
 /**
+ * Model Profile
+ * 
+ */
+export type Profile = Prisma.ProfileModel
+/**
  * Model TransactionItem
  * 
  */

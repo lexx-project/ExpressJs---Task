@@ -8,6 +8,7 @@ model User {
     //relation
     stores Store[]
     transactions Transaction[]
+    profile Profile?
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt

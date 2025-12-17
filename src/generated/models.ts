@@ -9,6 +9,7 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/Category'
+export type * from './models/Profile'
 export type * from './models/TransactionItem'
 export type * from './models/Transaction'
 export type * from './models/User'

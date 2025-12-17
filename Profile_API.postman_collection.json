@@ -1,0 +1,126 @@
+{
+  "info": {
+    "_postman_id": "profile-api-collection",
+    "name": "Profile API",
+    "description": "Collection untuk testing Profile endpoints - CRUD operations",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Get All Profiles",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/profiles",
+          "host": ["{{base_url}}"],
+          "path": ["profiles"]
+        },
+        "description": "Mengambil semua data profile"
+      },
+      "response": []
+    },
+    {
+      "name": "Get Profile by ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/profiles/:id",
+          "host": ["{{base_url}}"],
+          "path": ["profiles", ":id"],
+          "variable": [
+            {
+              "key": "id",
+              "value": "59ddf953-1c28-4d2d-b8b9-ac2dd4145729",
+              "description": "UUID dari profile"
+            }
+          ]
+        },
+        "description": "Mengambil data profile berdasarkan ID (UUID)"
+      },
+      "response": []
+    },
+    {
+      "name": "Create Profile",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"userId\": \"YOUR_USER_UUID_HERE\",\n  \"name\": \"John Doe\",\n  \"gender\": \"Male\",\n  \"address\": \"Jl. Merdeka No. 123, Jakarta\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/profiles",
+          "host": ["{{base_url}}"],
+          "path": ["profiles"]
+        },
+        "description": "Membuat profile baru. Pastikan userId adalah UUID dari user yang belum punya profile (relasi 1:1)\n\nRequired fields:\n- userId (UUID string) - ID user yang akan dibuat profilenya\n- name (string)\n- gender (string)\n- address (string)"
+      },
+      "response": []
+    },
+    {
+      "name": "Update Profile",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Jane Doe Updated\",\n  \"gender\": \"Female\",\n  \"address\": \"Jl. Sudirman No. 456, Bandung\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/profiles/:id",
+          "host": ["{{base_url}}"],
+          "path": ["profiles", ":id"],
+          "variable": [
+            {
+              "key": "id",
+              "value": "59ddf953-1c28-4d2d-b8b9-ac2dd4145729",
+              "description": "UUID dari profile yang akan diupdate"
+            }
+          ]
+        },
+        "description": "Update profile berdasarkan ID\n\nOptional fields (bisa salah satu atau semua):\n- name (string)\n- gender (string)\n- address (string)"
+      },
+      "response": []
+    },
+    {
+      "name": "Delete Profile",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/profiles/:id",
+          "host": ["{{base_url}}"],
+          "path": ["profiles", ":id"],
+          "variable": [
+            {
+              "key": "id",
+              "value": "59ddf953-1c28-4d2d-b8b9-ac2dd4145729",
+              "description": "UUID dari profile yang akan dihapus"
+            }
+          ]
+        },
+        "description": "Menghapus profile berdasarkan ID (soft delete)"
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000",
+      "type": "string"
+    }
+  ]
+}
