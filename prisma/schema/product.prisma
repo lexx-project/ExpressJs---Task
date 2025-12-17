@@ -4,13 +4,14 @@ model Product {
     description String?
     price Decimal @db.Decimal(10, 2)
     stock Int @default(8)  
+    image String?
 
 //relation to Store
     storeId String @db.Uuid
     store Store @relation(fields: [storeId], references: [id])
 
 //relation to Category
-categoryId  String?     @db.Uuid     
+    categoryId  String?     @db.Uuid     
     category    Category? @relation(fields: [categoryId], references: [id])
     
     //relation to Transaction Item

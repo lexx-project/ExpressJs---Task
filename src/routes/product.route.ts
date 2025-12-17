@@ -1,16 +1,34 @@
 import { Router } from "express";
-import { createProduct, deleteProduct, getAllProduct, getProductById, updateProduct } from "../controllers/product.controller";
-import { createProductValidation, validate } from "../middleware/product.validation";
+import {
+  createProduct,
+  deleteProduct,
+  getAllProduct,
+  getProductById,
+  updateProduct,
+} from "../controllers/product.controller";
+import {
+  createProductValidation,
+  validate,
+} from "../middleware/product.validation";
+import { upload } from "../middleware/upload.middleware";
+import { authenticate } from "../middleware/auth.middleware";
 
 const router = Router();
 console.log("Loading product routes...");
-router.get("/products", (req, res, next) => {
-    console.log("Route /products matched");
-    getAllProduct(req, res, next);
-});
-router.post("/products",validate(createProductValidation),createProduct)
-router.get("/products/:id",getProductById)
-router.put("/products/:id",updateProduct)
-router.delete("/products/:id",deleteProduct)
+router.get("/products", authenticate, getAllProduct);
+router.post(
+  "/products",
+  upload.single("image"),
+  validate(createProductValidation),
+  createProduct
+);
+router.get("/products/:id", getProductById);
+router.put(
+  "/products/:id",
+  upload.single("image"),
+  validate(createProductValidation),
+  updateProduct
+);
+router.delete("/products/:id", deleteProduct);
 
-export default router
+export default router;
