@@ -1,83 +1,61 @@
-# API Test Results
+# API Endpoint Testing Results
 
-**Test Date:** Tue Dec 16 10:21:07 AM WIB 2025  
-**Test Status:** ✅ All Endpoints Working Perfectly
+> **Base URL**: `http://localhost:3000/api/v1`  
+> **Test Date**: December 18, 2025  
+> **Status**: ✅ All endpoints tested successfully
 
 ---
 
-## 📊 Test Summary
+## 🔐 Authentication Endpoints
 
-| Category       | Endpoints Tested | Status  | Notes                                                         |
-| -------------- | ---------------- | ------- | ------------------------------------------------------------- |
-| Authentication | 2/2              | ✅ Pass | Register & Login working                                      |
-| Users          | 3/5              | ✅ Pass | CRUD working, soft delete implemented, **password hidden** ✨ |
-| Categories     | 5/5              | ✅ Pass | Full CRUD working                                             |
-| Stores         | 5/5              | ✅ Pass | Full CRUD working, **soft delete implemented** ✨             |
-| Products       | 5/5              | ✅ Pass | Full CRUD working, auth on list                               |
-| Transactions   | 2/2              | ✅ Pass | Checkout & History working                                    |
+### 1. Register User
 
-### Key Achievements ✨
+**POST** `/register`
 
-- ✅ **Store-User Relationship**: Stores auto-populate `userId` from JWT token
-- ✅ **Authentication Integration**: Store creation requires authentication
-- ✅ **Product-Store Relationship**: Products correctly linked to stores
-- ✅ **Transaction System**: Checkout and history working with auth
-- ✅ **Soft Delete**: Store deletion now uses soft delete (no foreign key errors)
-- ✅ **Security**: Password hash excluded from user responses
-
-### Recent Fixes 🔧
-
-- ✅ Changed store delete from hard delete → soft delete
-- ✅ Removed password from user API responses for security
-
-## Authentication Endpoints
-
-### Register User
-
-`POST /register`
-
-**Request:**
+**Request Body:**
 
 ```json
 {
-  "name": "Test User",
-  "email": "testuser1765855266@example.com",
-  "password": "password123"
+  "email": "test@example.com",
+  "password": "123456",
+  "name": "Test User"
 }
 ```
 
-**Response:**
+**Response (201):**
 
 ```json
 {
   "success": true,
   "message": "User registered successfully",
   "data": {
-    "id": "b1377f31-5323-4544-a763-9edeb88afd80",
+    "id": "dc408b58-b01f-427e-8dfd-92a282d3e7e6",
     "name": "Test User",
-    "email": "testuser1765855266@example.com",
+    "email": "test@example.com",
     "role": "USER",
-    "createdAt": "2025-12-16T03:21:06.680Z",
-    "updatedAt": "2025-12-16T03:21:06.680Z",
+    "createdAt": "2025-12-18T02:12:16.534Z",
+    "updatedAt": "2025-12-18T02:12:16.534Z",
     "deletedAt": null
   }
 }
 ```
 
-### Login User
+---
 
-`POST /login`
+### 2. Login User
 
-**Request:**
+**POST** `/login`
+
+**Request Body:**
 
 ```json
 {
-  "email": "testuser1765855266@example.com",
-  "password": "password123"
+  "email": "test@example.com",
+  "password": "123456"
 }
 ```
 
-**Response:**
+**Response (200):**
 
 ```json
 {
@@ -85,378 +63,29 @@
   "message": "User logged in successfully",
   "data": {
     "user": {
-      "id": "b1377f31-5323-4544-a763-9edeb88afd80",
+      "id": "dc408b58-b01f-427e-8dfd-92a282d3e7e6",
       "name": "Test User",
-      "email": "testuser1765855266@example.com",
+      "email": "test@example.com",
       "role": "USER",
-      "createdAt": "2025-12-16T03:21:06.680Z",
-      "updatedAt": "2025-12-16T03:21:06.680Z",
+      "createdAt": "2025-12-18T02:12:16.534Z",
+      "updatedAt": "2025-12-18T02:12:16.534Z",
       "deletedAt": null
     },
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImIxMzc3ZjMxLTUzMjMtNDU0NC1hNzYzLTllZGViODhhZmQ4MCIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzY1ODU1MjY2LCJleHAiOjE3NjY0NjAwNjZ9.HOCtq33sjrVmV59Tbzds3mZty8nPoZ7zrydqUPqxmZs"
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
   }
 }
 ```
 
-## User Endpoints
+---
 
-### Get All Users
+## 📦 Product Endpoints (Paginated)
 
-`GET /users`
+### 3. Get All Products (Default Pagination)
 
-**Response:**
+**GET** `/products`  
+**Auth Required**: ✅ Bearer Token
 
-```json
-{
-  "success": true,
-  "message": "Users fetched successfully",
-  "data": [
-    {
-      "id": "f093e963-09a2-4da9-8037-cb06e82ca5d0",
-      "name": "Test User",
-      "email": "testuser@gmail.com",
-      "role": "USER",
-      "createdAt": "2025-12-16T02:41:07.006Z",
-      "updatedAt": "2025-12-16T02:41:07.006Z",
-      "deletedAt": null
-      // 🔒 password field excluded for security
-    },
-    {
-      "id": "b1377f31-5323-4544-a763-9edeb88afd80",
-      "name": "Test User",
-      "email": "testuser1765855266@example.com",
-      "role": "USER",
-      "createdAt": "2025-12-16T03:21:06.680Z",
-      "updatedAt": "2025-12-16T03:21:06.680Z",
-      "deletedAt": null
-    }
-  ]
-}
-```
-
-> **🔒 Security:** Password hash is excluded from all user responses for security reasons.
-
-### Get User By ID
-
-`GET /users/b1377f31-5323-4544-a763-9edeb88afd80`
-
-**Response:**
-
-```json
-{
-  "success": true,
-  "message": "User fetched successfully",
-  "data": {
-    "id": "b1377f31-5323-4544-a763-9edeb88afd80",
-    "name": "Test User",
-    "email": "testuser1765855266@example.com",
-    "role": "USER",
-    "createdAt": "2025-12-16T03:21:06.680Z",
-    "updatedAt": "2025-12-16T03:21:06.680Z",
-    "deletedAt": null
-  }
-}
-```
-
-## Category Endpoints
-
-### Create Category
-
-`POST /categories`
-
-**Request:**
-
-```json
-{
-  "name": "Electronics_1765855266"
-}
-```
-
-**Response:**
-
-```json
-{
-  "success": true,
-  "message": "Category created successfully",
-  "data": {
-    "id": "fa4fd058-80d8-4f2c-b67a-07425b8284b3",
-    "name": "Electronics_1765855266",
-    "createdAt": "2025-12-16T03:21:06.924Z",
-    "updatedAt": "2025-12-16T03:21:06.924Z",
-    "deletedAt": null
-  }
-}
-```
-
-### Get All Categories
-
-`GET /categories`
-
-**Response:**
-
-```json
-{
-  "success": true,
-  "message": "Categories fetched successfully",
-  "data": [
-    {
-      "id": "9c1de80e-1ec5-4cb4-8544-9c09992c82cd",
-      "name": "Electronics",
-      "createdAt": "2025-12-16T02:45:00.856Z",
-      "updatedAt": "2025-12-16T02:45:00.856Z",
-      "deletedAt": null
-    },
-    {
-      "id": "fa4fd058-80d8-4f2c-b67a-07425b8284b3",
-      "name": "Electronics_1765855266",
-      "createdAt": "2025-12-16T03:21:06.924Z",
-      "updatedAt": "2025-12-16T03:21:06.924Z",
-      "deletedAt": null
-    }
-  ]
-}
-```
-
-### Get Category By ID
-
-`GET /categories/fa4fd058-80d8-4f2c-b67a-07425b8284b3`
-
-**Response:**
-
-```json
-{
-  "success": true,
-  "message": "Category fetched successfully",
-  "data": {
-    "id": "fa4fd058-80d8-4f2c-b67a-07425b8284b3",
-    "name": "Electronics_1765855266",
-    "createdAt": "2025-12-16T03:21:06.924Z",
-    "updatedAt": "2025-12-16T03:21:06.924Z",
-    "deletedAt": null
-  }
-}
-```
-
-### Update Category
-
-`PUT /categories/fa4fd058-80d8-4f2c-b67a-07425b8284b3`
-
-**Request:**
-
-```json
-{
-  "name": "Updated_Electronics_1765855266"
-}
-```
-
-**Response:**
-
-```json
-{
-  "success": true,
-  "message": "Category updated successfully",
-  "data": {
-    "id": "fa4fd058-80d8-4f2c-b67a-07425b8284b3",
-    "name": "Updated_Electronics_1765855266",
-    "createdAt": "2025-12-16T03:21:06.924Z",
-    "updatedAt": "2025-12-16T03:21:07.021Z",
-    "deletedAt": null
-  }
-}
-```
-
-## Store Endpoints
-
-### Create Store (Authenticated)
-
-`POST /stores`
-
-**Request Headers:**
-
-```
-Authorization: Bearer <JWT_TOKEN>
-```
-
-**Request Body:**
-
-```json
-{
-  "name": "TestStore_1765855266",
-  "description": "A test store",
-  "location": "Jakarta"
-}
-```
-
-**Response:**
-
-```json
-{
-  "success": true,
-  "message": "Store created successfully",
-  "data": {
-    "id": "dc9e7107-5ee7-400d-95cc-8b829a5c9ebb",
-    "name": "TestStore_1765855266",
-    "description": "A test store",
-    "location": "Jakarta",
-    "userId": "b1377f31-5323-4544-a763-9edeb88afd80",
-    "createdAt": "2025-12-16T03:21:07.254Z",
-    "updatedAt": "2025-12-16T03:21:07.254Z",
-    "deletedAt": null
-  }
-}
-```
-
-### Get All Stores
-
-`GET /stores`
-
-**Response:**
-
-```json
-{
-  "success": true,
-  "message": "Stores fetched successfully",
-  "data": [
-    {
-      "id": "dc981a55-692d-4110-b971-b840ef680d7b",
-      "name": "Toko Elektronik Jakarta",
-      "description": "Toko elektronik terlengkap di Jakarta",
-      "location": "Jakarta Selatan",
-      "userId": null,
-      "createdAt": "2025-12-16T02:44:54.543Z",
-      "updatedAt": "2025-12-16T02:44:54.543Z",
-      "deletedAt": null
-    },
-    {
-      "id": "35bf6b1c-3774-4848-9987-0f230a5f51ed",
-      "name": "UpdatedStore_1765854928",
-      "description": "A test store",
-      "location": "Bandung",
-      "userId": "60da5e86-dd1f-4bfe-bf49-f04e10b787d8",
-      "createdAt": "2025-12-16T03:15:29.036Z",
-      "updatedAt": "2025-12-16T03:15:29.127Z",
-      "deletedAt": null
-    },
-    {
-      "id": "dc9e7107-5ee7-400d-95cc-8b829a5c9ebb",
-      "name": "TestStore_1765855266",
-      "description": "A test store",
-      "location": "Jakarta",
-      "userId": "b1377f31-5323-4544-a763-9edeb88afd80",
-      "createdAt": "2025-12-16T03:21:07.254Z",
-      "updatedAt": "2025-12-16T03:21:07.254Z",
-      "deletedAt": null
-    }
-  ]
-}
-```
-
-### Get Store By ID
-
-`GET /stores/dc9e7107-5ee7-400d-95cc-8b829a5c9ebb`
-
-**Response:**
-
-```json
-{
-  "success": true,
-  "message": "Store fetched successfully",
-  "data": {
-    "id": "dc9e7107-5ee7-400d-95cc-8b829a5c9ebb",
-    "name": "TestStore_1765855266",
-    "description": "A test store",
-    "location": "Jakarta",
-    "userId": "b1377f31-5323-4544-a763-9edeb88afd80",
-    "createdAt": "2025-12-16T03:21:07.254Z",
-    "updatedAt": "2025-12-16T03:21:07.254Z",
-    "deletedAt": null
-  }
-}
-```
-
-### Update Store
-
-`PUT /stores/dc9e7107-5ee7-400d-95cc-8b829a5c9ebb`
-
-**Request:**
-
-```json
-{
-  "name": "UpdatedStore_1765855266",
-  "location": "Bandung"
-}
-```
-
-**Response:**
-
-```json
-{
-  "success": true,
-  "message": "Store updated successfully",
-  "data": {
-    "id": "dc9e7107-5ee7-400d-95cc-8b829a5c9ebb",
-    "name": "UpdatedStore_1765855266",
-    "description": "A test store",
-    "location": "Bandung",
-    "userId": "b1377f31-5323-4544-a763-9edeb88afd80",
-    "createdAt": "2025-12-16T03:21:07.254Z",
-    "updatedAt": "2025-12-16T03:21:07.360Z",
-    "deletedAt": null
-  }
-}
-```
-
-## Product Endpoints
-
-### Create Product
-
-`POST /products`
-
-**Request:**
-
-```json
-{
-  "name": "Laptop_1765855266",
-  "description": "Gaming Laptop",
-  "price": 15000000,
-  "stock": 10,
-  "storeId": "dc9e7107-5ee7-400d-95cc-8b829a5c9ebb",
-  "categoryId": "fa4fd058-80d8-4f2c-b67a-07425b8284b3"
-}
-```
-
-**Response:**
-
-```json
-{
-  "success": true,
-  "message": "Product created successfully",
-  "data": {
-    "id": "63a4db8c-b5c9-4e9a-b10f-f7b504934d6d",
-    "name": "Laptop_1765855266",
-    "description": "Gaming Laptop",
-    "price": "15000000",
-    "stock": 10,
-    "storeId": "dc9e7107-5ee7-400d-95cc-8b829a5c9ebb",
-    "categoryId": "fa4fd058-80d8-4f2c-b67a-07425b8284b3",
-    "createdAt": "2025-12-16T03:21:07.398Z",
-    "updatedAt": "2025-12-16T03:21:07.398Z",
-    "deletedAt": null
-  }
-}
-```
-
-### Get All Products (Authenticated)
-
-`GET /products`
-
-**Request Headers:**
-
-```
-Authorization: Bearer <JWT_TOKEN>
-```
-
-**Response:**
+**Response (200):**
 
 ```json
 {
@@ -464,299 +93,356 @@ Authorization: Bearer <JWT_TOKEN>
   "message": "Products fetched successfully",
   "data": [
     {
-      "id": "972bda56-70cd-439d-a8a0-0c3fc6c1072f",
-      "name": "Laptop ASUS ROG",
-      "description": "Gaming laptop dengan RTX 4060",
-      "price": "15000000",
-      "stock": 9,
-      "storeId": "dc981a55-692d-4110-b971-b840ef680d7b",
-      "categoryId": "9c1de80e-1ec5-4cb4-8544-9c09992c82cd",
-      "createdAt": "2025-12-16T02:45:05.392Z",
-      "updatedAt": "2025-12-16T02:45:36.399Z",
-      "deletedAt": null
-    },
-    {
-      "id": "49335838-8aed-4645-81f3-869263fe57c4",
-      "name": "Logitech G502 Mouse",
-      "description": "Mouse gaming wireless",
-      "price": "750000",
-      "stock": 23,
-      "storeId": "dc981a55-692d-4110-b971-b840ef680d7b",
-      "categoryId": "9c1de80e-1ec5-4cb4-8544-9c09992c82cd",
-      "createdAt": "2025-12-16T02:45:10.137Z",
-      "updatedAt": "2025-12-16T02:45:36.407Z",
-      "deletedAt": null
-    },
-    {
-      "id": "18f65698-16db-48d0-b4e9-6ffbdd6a301b",
-      "name": "Keychron K2 Keyboard",
-      "description": "Mechanical keyboard wireless",
-      "price": "1200000",
-      "stock": 14,
-      "storeId": "dc981a55-692d-4110-b971-b840ef680d7b",
-      "categoryId": "9c1de80e-1ec5-4cb4-8544-9c09992c82cd",
-      "createdAt": "2025-12-16T02:45:14.656Z",
-      "updatedAt": "2025-12-16T02:45:36.413Z",
-      "deletedAt": null
-    },
-    {
-      "id": "63a4db8c-b5c9-4e9a-b10f-f7b504934d6d",
-      "name": "Laptop_1765855266",
-      "description": "Gaming Laptop",
-      "price": "15000000",
-      "stock": 10,
-      "storeId": "dc9e7107-5ee7-400d-95cc-8b829a5c9ebb",
-      "categoryId": "fa4fd058-80d8-4f2c-b67a-07425b8284b3",
-      "createdAt": "2025-12-16T03:21:07.398Z",
-      "updatedAt": "2025-12-16T03:21:07.398Z",
-      "deletedAt": null
+      "id": "16b0bb6c-cceb-4fb8-b5f6-74eabf4a4554",
+      "name": "Gaming Chair #100",
+      "description": "Great value for money - Product variant 100",
+      "price": "972537.94",
+      "stock": 77,
+      "image": null,
+      "storeId": "6a4675c4-839d-496a-ba81-0b4410b28380",
+      "categoryId": "a22a683f-9058-4781-ae5c-a0b4dbdfd039",
+      "createdAt": "2025-12-18T01:35:18.833Z",
+      "updatedAt": "2025-12-18T01:35:18.833Z",
+      "deletedAt": null,
+      "category": {
+        "id": "a22a683f-9058-4781-ae5c-a0b4dbdfd039",
+        "name": "Electronics",
+        "createdAt": "2025-12-17T02:05:41.895Z",
+        "updatedAt": "2025-12-17T02:05:41.895Z",
+        "deletedAt": null
+      }
     }
-  ]
-}
-```
-
-### Get Product By ID
-
-`GET /products/63a4db8c-b5c9-4e9a-b10f-f7b504934d6d`
-
-**Response:**
-
-```json
-{
-  "success": true,
-  "message": "Product fetched successfully",
-  "data": {
-    "id": "63a4db8c-b5c9-4e9a-b10f-f7b504934d6d",
-    "name": "Laptop_1765855266",
-    "description": "Gaming Laptop",
-    "price": "15000000",
-    "stock": 10,
-    "storeId": "dc9e7107-5ee7-400d-95cc-8b829a5c9ebb",
-    "categoryId": "fa4fd058-80d8-4f2c-b67a-07425b8284b3",
-    "createdAt": "2025-12-16T03:21:07.398Z",
-    "updatedAt": "2025-12-16T03:21:07.398Z",
-    "deletedAt": null
-  }
-}
-```
-
-### Update Product
-
-`PUT /products/63a4db8c-b5c9-4e9a-b10f-f7b504934d6d`
-
-**Request:**
-
-```json
-{
-  "name": "Laptop Pro_1765855266",
-  "price": 18000000
-}
-```
-
-**Response:**
-
-```json
-{
-  "success": true,
-  "message": "Product updated successfully",
-  "data": {
-    "id": "63a4db8c-b5c9-4e9a-b10f-f7b504934d6d",
-    "name": "Laptop Pro_1765855266",
-    "description": "Gaming Laptop",
-    "price": "18000000",
-    "stock": 10,
-    "storeId": "dc9e7107-5ee7-400d-95cc-8b829a5c9ebb",
-    "categoryId": "fa4fd058-80d8-4f2c-b67a-07425b8284b3",
-    "createdAt": "2025-12-16T03:21:07.398Z",
-    "updatedAt": "2025-12-16T03:21:07.502Z",
-    "deletedAt": null
-  }
-}
-```
-
-## Transaction Endpoints
-
-### Checkout (Create Transaction)
-
-`POST /transactions/checkout`
-
-**Request Headers:**
-
-```
-Authorization: Bearer <JWT_TOKEN>
-```
-
-**Request Body:**
-
-```json
-{
-  "items": [
-    {
-      "productId": "63a4db8c-b5c9-4e9a-b10f-f7b504934d6d",
-      "quantity": 2
-    }
-  ]
-}
-```
-
-**Response:**
-
-```json
-{
-  "success": true,
-  "message": "Transaction created successfully",
-  "data": {
-    "id": "19cb5726-5103-4dbf-a4b1-74ac755ab415",
-    "total": "36000000",
-    "createdAt": "2025-12-16T03:21:07.543Z",
-    "userId": "b1377f31-5323-4544-a763-9edeb88afd80"
-  }
-}
-```
-
-### Get Transaction History
-
-`GET /transactions/history`
-
-**Request Headers:**
-
-```
-Authorization: Bearer <JWT_TOKEN>
-```
-
-**Response:**
-
-```json
-{
-  "success": true,
-  "message": "Transaction history fetched successfully",
-  "data": [
-    {
-      "id": "19cb5726-5103-4dbf-a4b1-74ac755ab415",
-      "total": "36000000",
-      "createdAt": "2025-12-16T03:21:07.543Z",
-      "userId": "b1377f31-5323-4544-a763-9edeb88afd80",
-      "items": [
-        {
-          "id": "2f40fac9-0fc4-4501-9aec-1723ea5bba6d",
-          "quantity": 2,
-          "price": "18000000",
-          "transactionId": "19cb5726-5103-4dbf-a4b1-74ac755ab415",
-          "productId": "63a4db8c-b5c9-4e9a-b10f-f7b504934d6d",
-          "product": {
-            "id": "63a4db8c-b5c9-4e9a-b10f-f7b504934d6d",
-            "name": "Laptop Pro_1765855266",
-            "description": "Gaming Laptop",
-            "price": "18000000",
-            "stock": 8,
-            "storeId": "dc9e7107-5ee7-400d-95cc-8b829a5c9ebb",
-            "categoryId": "fa4fd058-80d8-4f2c-b67a-07425b8284b3",
-            "createdAt": "2025-12-16T03:21:07.398Z",
-            "updatedAt": "2025-12-16T03:21:07.552Z",
-            "deletedAt": null
-          }
-        }
-      ]
-    }
-  ]
-}
-```
-
-## Delete Operations
-
-### Delete Product (Soft Delete)
-
-`DELETE /products/63a4db8c-b5c9-4e9a-b10f-f7b504934d6d`
-
-**Response:**
-
-```json
-{
-  "success": true,
-  "message": "Product deleted successfully",
-  "data": {
-    "id": "63a4db8c-b5c9-4e9a-b10f-f7b504934d6d",
-    "name": "Laptop Pro_1765855266",
-    "description": "Gaming Laptop",
-    "price": "18000000",
-    "stock": 8,
-    "storeId": "dc9e7107-5ee7-400d-95cc-8b829a5c9ebb",
-    "categoryId": "fa4fd058-80d8-4f2c-b67a-07425b8284b3",
-    "createdAt": "2025-12-16T03:21:07.398Z",
-    "updatedAt": "2025-12-16T03:21:07.632Z",
-    "deletedAt": "2025-12-16T03:21:07.631Z"
-  }
-}
-```
-
-### Delete Category
-
-`DELETE /categories/fa4fd058-80d8-4f2c-b67a-07425b8284b3`
-
-**Response:**
-
-```json
-{
-  "success": true,
-  "message": "Category deleted successfully",
-  "data": {
-    "id": "fa4fd058-80d8-4f2c-b67a-07425b8284b3",
-    "name": "Updated_Electronics_1765855266",
-    "createdAt": "2025-12-16T03:21:06.924Z",
-    "updatedAt": "2025-12-16T03:21:07.661Z",
-    "deletedAt": "2025-12-16T03:21:07.660Z"
-  }
-}
-```
-
-### Delete Store (Soft Delete)
-
-`DELETE /stores/dc9e7107-5ee7-400d-95cc-8b829a5c9ebb`
-
-**Response:**
-
-```json
-{
-  "success": true,
-  "message": "Store deleted successfully",
-  "data": {
-    "id": "dc9e7107-5ee7-400d-95cc-8b829a5c9ebb",
-    "name": "UpdatedStore_1765855266",
-    "description": "A test store",
-    "location": "Bandung",
-    "userId": "b1377f31-5323-4544-a763-9edeb88afd80",
-    "createdAt": "2025-12-16T03:21:07.254Z",
-    "updatedAt": "2025-12-16T03:21:07.692Z",
-    "deletedAt": "2025-12-16T03:21:07.691Z" // ✅ Soft delete working!
-  }
-}
-```
-
-> **✅ Success:** Store deletion now uses soft delete. Store can be deleted even with products. The `deletedAt` field is populated and the store is excluded from GET requests.
-
-### Delete User (Soft Delete)
-
-`DELETE /users/b1377f31-5323-4544-a763-9edeb88afd80`
-
-**Response:**
-
-```json
-{
-  "success": true,
-  "message": "User deleted successfully",
-  "data": {
-    "id": "b1377f31-5323-4544-a763-9edeb88afd80",
-    "name": "Test User",
-    "email": "testuser1765855266@example.com",
-    "password": "$2b$10$oorvWfSA0ZybbHyOQ1kuWOiDsdLEFPcOcSe/761zlQRiQ0mPjK2EO",
-    "role": "USER",
-    "createdAt": "2025-12-16T03:21:06.680Z",
-    "updatedAt": "2025-12-16T03:21:07.722Z",
-    "deletedAt": "2025-12-16T03:21:07.721Z"
+    // ... 9 more items
+  ],
+  "pagination": {
+    "totalItems": 100,
+    "totalPages": 10,
+    "currentPage": 1
   }
 }
 ```
 
 ---
 
-**Test completed at:** Tue Dec 16 10:21:07 AM WIB 2025
+### 4. Get Products with Custom Pagination
+
+**GET** `/products?page=1&limit=5`  
+**Auth Required**: ✅ Bearer Token
+
+**Query Parameters:**
+
+- `page`: 1 (default: 1)
+- `limit`: 5 (default: 10)
+- `search`: optional search term
+- `sortBy`: optional field to sort by
+- `sortOrder`: `asc` or `desc` (default: desc)
+
+**Response (200):**
+
+```json
+{
+  "success": true,
+  "message": "Products fetched successfully",
+  "data": [
+    // Array of 5 products
+  ],
+  "pagination": {
+    "totalItems": 100,
+    "totalPages": 20,
+    "currentPage": 1
+  }
+}
+```
+
+---
+
+## 🏷️ Category Endpoints (Paginated)
+
+### 5. Get All Categories (Default Pagination)
+
+**GET** `/categories`
+
+**Response (200):**
+
+```json
+{
+  "success": true,
+  "message": "Categories fetched successfully",
+  "data": [
+    {
+      "id": "6f08ce89-7625-4678-b370-7a986272ee9b",
+      "name": "Food & Beverages",
+      "createdAt": "2025-12-18T01:35:18.175Z",
+      "updatedAt": "2025-12-18T01:35:18.175Z",
+      "deletedAt": null
+    },
+    {
+      "id": "3512e133-6a14-490d-9da7-fa1dc23f7635",
+      "name": "Health & Beauty",
+      "createdAt": "2025-12-18T01:35:18.162Z",
+      "updatedAt": "2025-12-18T01:35:18.162Z",
+      "deletedAt": null
+    }
+    // ... 6 more categories
+  ],
+  "pagination": {
+    "totalItems": 8,
+    "totalPages": 1,
+    "currentPage": 1
+  }
+}
+```
+
+---
+
+### 6. Get Categories with Pagination
+
+**GET** `/categories?page=1&limit=5`
+
+**Query Parameters:**
+
+- `page`: 1
+- `limit`: 5
+- `search`: optional
+- `sortBy`: optional
+- `sortOrder`: `asc` or `desc`
+
+**Response (200):**
+
+```json
+{
+  "success": true,
+  "message": "Categories fetched successfully",
+  "data": [
+    // Array of 5 categories
+  ],
+  "pagination": {
+    "totalItems": 8,
+    "totalPages": 2,
+    "currentPage": 1
+  }
+}
+```
+
+---
+
+## 🏪 Store Endpoints (Paginated)
+
+### 7. Get All Stores (Default Pagination)
+
+**GET** `/stores`
+
+**Response (200):**
+
+```json
+{
+  "success": true,
+  "message": "Stores fetched successfully",
+  "data": [
+    {
+      "id": "975dccca-1930-413c-ac8d-d01ad37ce666",
+      "name": "Book Haven",
+      "description": "Books for every reader",
+      "location": "Medan",
+      "userId": null,
+      "createdAt": "2025-12-18T01:35:18.292Z",
+      "updatedAt": "2025-12-18T01:35:18.292Z",
+      "deletedAt": null
+    },
+    {
+      "id": "6a4675c4-839d-496a-ba81-0b4410b28380",
+      "name": "Sports World",
+      "description": "Sports equipment and gear",
+      "location": "Yogyakarta",
+      "userId": null,
+      "createdAt": "2025-12-18T01:35:18.286Z",
+      "updatedAt": "2025-12-18T01:35:18.286Z",
+      "deletedAt": null
+    }
+    // ... 4 more stores
+  ],
+  "pagination": {
+    "totalItems": 6,
+    "totalPages": 1,
+    "currentPage": 1
+  }
+}
+```
+
+---
+
+### 8. Get Stores with Pagination
+
+**GET** `/stores?page=1&limit=3`
+
+**Query Parameters:**
+
+- `page`: 1
+- `limit`: 3
+- `search`: optional
+- `sortBy`: optional
+- `sortOrder`: `asc` or `desc`
+
+**Response (200):**
+
+```json
+{
+  "success": true,
+  "message": "Stores fetched successfully",
+  "data": [
+    // Array of 3 stores
+  ],
+  "pagination": {
+    "totalItems": 6,
+    "totalPages": 2,
+    "currentPage": 1
+  }
+}
+```
+
+---
+
+## 👥 User Endpoints
+
+### 9. Get All Users
+
+**GET** `/users`
+
+**Response (200):**
+
+```json
+{
+  "success": true,
+  "message": "Users fetched successfully",
+  "data": [
+    {
+      "id": "0d34142f-fd08-426f-b02a-04bd46b26717",
+      "name": "Test User",
+      "email": "testuser@gmail.com",
+      "role": "USER",
+      "createdAt": "2025-12-17T02:04:34.623Z",
+      "updatedAt": "2025-12-17T02:04:34.623Z",
+      "deletedAt": null
+    },
+    {
+      "id": "caba69ef-4ca5-45b8-8955-f5a68cf4b63e",
+      "name": "Test User 2",
+      "email": "testuser2@gmail.com",
+      "role": "USER",
+      "createdAt": "2025-12-17T02:44:34.603Z",
+      "updatedAt": "2025-12-17T02:44:34.603Z",
+      "deletedAt": null
+    },
+    {
+      "id": "d7704aca-89ee-4d15-aca6-51239f5d1660",
+      "name": "John Cena",
+      "email": "johncena@gmail.com",
+      "role": "USER",
+      "createdAt": "2025-12-17T03:01:40.659Z",
+      "updatedAt": "2025-12-17T03:01:40.659Z",
+      "deletedAt": null
+    },
+    {
+      "id": "dc408b58-b01f-427e-8dfd-92a282d3e7e6",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "USER",
+      "createdAt": "2025-12-18T02:12:16.534Z",
+      "updatedAt": "2025-12-18T02:12:16.534Z",
+      "deletedAt": null
+    }
+  ]
+}
+```
+
+---
+
+## 👤 Profile Endpoints
+
+### 10. Get All Profiles
+
+**GET** `/profiles`
+
+**Response (200):**
+
+```json
+{
+  "success": true,
+  "message": "Profile fetched successfully",
+  "data": [
+    {
+      "id": "59ddf953-1c28-4d2d-b8b9-ac2dd4145729",
+      "name": "Profile User 2",
+      "gender": "Female",
+      "address": "Jl. Asia Afrika No. 100, Bandung",
+      "image": null,
+      "userId": "caba69ef-4ca5-45b8-8955-f5a68cf4b63e",
+      "createdAt": "2025-12-17T02:44:40.835Z",
+      "updatedAt": "2025-12-17T02:44:40.835Z",
+      "deletedAt": null
+    },
+    {
+      "id": "fbdf0a61-63ad-4a80-9408-aab0bc928092",
+      "name": "John Cena",
+      "gender": "male",
+      "address": "Jl. Merdeka No. 123, Jakarta",
+      "image": "/uploads/1765940568393-715173424.jpg",
+      "userId": "d7704aca-89ee-4d15-aca6-51239f5d1660",
+      "createdAt": "2025-12-17T03:02:48.401Z",
+      "updatedAt": "2025-12-17T03:02:48.401Z",
+      "deletedAt": null
+    }
+  ]
+}
+```
+
+---
+
+## 📊 Summary
+
+### ✅ Pagination Implementation Status
+
+| Endpoint       | Pagination | Root-Level | Status        |
+| -------------- | ---------- | ---------- | ------------- |
+| **Products**   | ✅         | ✅         | Working       |
+| **Categories** | ✅         | ✅         | Working       |
+| **Stores**     | ✅         | ✅         | Working       |
+| **Users**      | ❌         | N/A        | No Pagination |
+| **Profiles**   | ❌         | N/A        | No Pagination |
+
+### 📌 Pagination Features
+
+All paginated endpoints support:
+
+- ✅ Default pagination (page=1, limit=10)
+- ✅ Custom page and limit
+- ✅ Search functionality
+- ✅ Sorting by field
+- ✅ Sort order (asc/desc)
+- ✅ **Root-level pagination metadata** (not nested in data)
+
+### 🎯 Response Structure (Paginated Endpoints)
+
+```json
+{
+  "success": true,
+  "message": "...",
+  "data": [...],           // ✅ Array directly at root
+  "pagination": {          // ✅ Pagination metadata at root level
+    "totalItems": 100,
+    "totalPages": 10,
+    "currentPage": 1
+  }
+}
+```
+
+---
+
+## 🔑 Notes
+
+1. **Authentication**: Products endpoint requires Bearer token in Authorization header
+2. **Seed Data**: 100 products, 8 categories, 6 stores available for testing
+3. **Pagination**: All paginated endpoints return metadata at root level (not nested)
+4. **Default Values**: page=1, limit=10 when not specified
+5. **Search**: Case-insensitive search on name field
+6. **Sorting**: Defaults to createdAt DESC if not specified
