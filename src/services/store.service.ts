@@ -1,11 +1,43 @@
 import prisma from "../prisma";
 
-export const getAllStore = async () => {
-  return await prisma.store.findMany({
-    where: {
-      deletedAt: null,
-    },
+interface findAllParams {
+  page: number;
+  limit: number;
+  search?: string;
+  sortBy?: string;
+  sortOrder?: "asc" | "desc";
+}
+
+export const getAllStore = async (params: findAllParams) => {
+  const { page, limit, search, sortBy, sortOrder } = params;
+
+  const skip = (page - 1) * limit;
+
+  const whereClause: any = {
+    deletedAt: null,
+  };
+
+  if (search) {
+    whereClause.name = { contains: search, mode: "insensitive" };
+  }
+
+  const stores = await prisma.store.findMany({
+    skip: skip,
+    take: limit,
+    where: whereClause,
+    orderBy: sortBy ? { [sortBy]: sortOrder || "desc" } : { createdAt: "desc" },
   });
+
+  const totalItems = await prisma.store.count({
+    where: whereClause,
+  });
+
+  return {
+    stores,
+    totalItems,
+    totalPages: Math.ceil(totalItems / limit),
+    currentPage: page,
+  };
 };
 
 export const getStoreById = async (id: string) => {

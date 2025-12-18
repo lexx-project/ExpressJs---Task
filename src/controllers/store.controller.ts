@@ -3,12 +3,32 @@ import { Request, Response } from "express";
 import * as storeServices from "../services/store.service";
 import { succesResponse } from "../utils/response";
 
-export const getAllStore = asyncHandler(
-  async (_req: Request, res: Response) => {
-    const stores = await storeServices.getAllStore();
-    return succesResponse(res, "Stores fetched successfully", stores, 200);
-  }
-);
+export const getAllStore = asyncHandler(async (req: Request, res: Response) => {
+  const page = Number(req.query.page) || 1;
+  const limit = Number(req.query.limit) || 10;
+  const search = req.query.search ? String(req.query.search) : undefined;
+  const sortBy = req.query.sortBy ? String(req.query.sortBy) : undefined;
+  const sortOrder = (req.query.sortOrder as "asc" | "desc") || "desc";
+
+  const stores = await storeServices.getAllStore({
+    page,
+    limit,
+    search,
+    sortBy,
+    sortOrder,
+  });
+  return succesResponse(
+    res,
+    "Stores fetched successfully",
+    stores.stores,
+    200,
+    {
+      totalItems: stores.totalItems,
+      totalPages: stores.totalPages,
+      currentPage: stores.currentPage,
+    }
+  );
+});
 
 export const getStoreById = asyncHandler(
   async (req: Request, res: Response) => {
