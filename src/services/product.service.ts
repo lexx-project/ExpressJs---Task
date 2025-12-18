@@ -1,11 +1,49 @@
 import prisma from "../prisma";
 
-export const getAllProduct = async () => {
-  return await prisma.product.findMany({
-    where: {
-      deletedAt: null,
+interface findAllParam {
+  page: number;
+  limit: number;
+  search?: string;
+  sortBy?: string;
+  sortOrder?: "asc" | "desc";
+}
+
+export const getAllProduct = async (params: findAllParam) => {
+  const { page, limit, search, sortBy, sortOrder } = params;
+
+  const skip = (page - 1) * limit;
+
+  const whereClause: any = {
+    deletedAt: null,
+  };
+
+  if (search) {
+    whereClause.name = {
+      contains: search,
+      mode: "insensitive",
+    };
+  }
+
+  const products = await prisma.product.findMany({
+    skip: skip,
+    take: limit,
+    where: whereClause,
+    orderBy: sortBy ? { [sortBy]: sortOrder || "desc" } : { createdAt: "desc" },
+    include: {
+      category: true,
     },
   });
+
+  const totalItems = await prisma.product.count({
+    where: whereClause,
+  });
+
+  return {
+    products,
+    totalItems,
+    totalPages: Math.ceil(totalItems / limit),
+    currentPage: page,
+  };
 };
 
 export const createProduct = async (data: any) => {

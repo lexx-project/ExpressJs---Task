@@ -14,14 +14,30 @@ const transformProductImage = (product: any) => {
 };
 
 export const getAllProduct = asyncHandler(
-  async (_req: Request, res: Response) => {
-    const products = await ProductServices.getAllProduct();
-    const transformedProducts = products.map(transformProductImage);
+  async (req: Request, res: Response) => {
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+    const search = req.query.search ? String(req.query.search) : undefined;
+    const sortBy = req.query.sortBy ? String(req.query.sortBy) : undefined;
+    const sortOrder = (req.query.sortOrder as "asc" | "desc") || "desc";
+    const products = await ProductServices.getAllProduct({
+      page,
+      limit,
+      search,
+      sortBy,
+      sortOrder,
+    });
+    const transformedProducts = products.products.map(transformProductImage);
     succesResponse(
       res,
       "Products fetched successfully",
       transformedProducts,
-      200
+      200,
+      {
+        totalItems: products.totalItems,
+        totalPages: products.totalPages,
+        currentPage: products.currentPage,
+      }
     );
   }
 );
