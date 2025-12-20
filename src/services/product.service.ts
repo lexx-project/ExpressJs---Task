@@ -1,4 +1,4 @@
-import prisma from "../prisma";
+import * as productRepo from "../repositories/product.repository";
 
 interface findAllParam {
   page: number;
@@ -24,19 +24,18 @@ export const getAllProduct = async (params: findAllParam) => {
     };
   }
 
-  const products = await prisma.product.findMany({
-    skip: skip,
-    take: limit,
-    where: whereClause,
-    orderBy: sortBy ? { [sortBy]: sortOrder || "desc" } : { createdAt: "desc" },
-    include: {
-      category: true,
-    },
-  });
+  const sortCriteria = sortBy
+    ? { [sortBy]: sortOrder || "desc" }
+    : { createdAt: "desc" as const };
 
-  const totalItems = await prisma.product.count({
-    where: whereClause,
-  });
+  const products = await productRepo.findAll(
+    skip,
+    limit,
+    whereClause,
+    sortCriteria
+  );
+
+  const totalItems = await productRepo.countAll(whereClause);
 
   return {
     products,
@@ -47,36 +46,17 @@ export const getAllProduct = async (params: findAllParam) => {
 };
 
 export const createProduct = async (data: any) => {
-  return await prisma.product.create({
-    data,
-  });
+  return await productRepo.create(data);
 };
 
 export const getProductById = async (id: string) => {
-  return await prisma.product.findUnique({
-    where: {
-      id,
-      deletedAt: null,
-    },
-  });
+  return await productRepo.findById(id);
 };
 
 export const updateProduct = async (id: string, data: any) => {
-  return await prisma.product.update({
-    where: {
-      id,
-    },
-    data,
-  });
+  return await productRepo.update(id, data);
 };
 
 export const deleteProduct = async (id: string) => {
-  return await prisma.product.update({
-    where: {
-      id,
-    },
-    data: {
-      deletedAt: new Date(),
-    },
-  });
+  return await productRepo.softDelete(id);
 };
